@@ -3,37 +3,43 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { NODE_ENV, JWT_SECRET } = process.env;
+const NotFoundError = require('../errors/not-found-err');
 
 
-
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, password, email } = req.body;
   bcrypt.hash(password, 10)
     .then(hash => User.create({ name, about, avatar, email, password: hash }))
-    .then(user => res.send({ message:"Пользователь создан" }))
-    .catch((err) => res.status(400).send({ message: err.message }));
+    .then(user => {
+      if (!user) {
+        throw new NotFoundError("Данные указаны неверно");
+      }
+      res.send({ message: "Пользователь создан" });
+    })
+    .catch(next);
 };
 
 
-module.exports.findUser = (req, res) => {
+module.exports.findUser = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
-      if (!user) throw ({ message: "Пользователь не найден" });
-      return user;
+      if (!user) {
+        throw new NotFoundError("Пользователь не найден");
+      }
+      res.send(user);
     })
-    .then((user) => res.send(user))
-    .catch((err) => res.status(404).send({ message: err.message }));
+    .catch(next);
 }
 
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then(user => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
 
@@ -46,9 +52,7 @@ module.exports.login = (req, res) => {
       res.status(200).send({ token })
     })
 
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch(next);
 
 
 };
