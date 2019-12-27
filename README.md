@@ -1,5 +1,5 @@
-Practical work №15
-<h1>Yandex.Praktikum</h1>
+<h1>Practical work №15</h1>
+Yandex.Praktikum
 
 https://github.com/SrgRsy/PR15
 
