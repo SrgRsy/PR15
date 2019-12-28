@@ -11,9 +11,8 @@ module.exports = (req, res, next) => {
     return header.replace('Bearer ', '');
   };
   const { authorization } = req.headers;
-  console.log(authorization);
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return  next(new AuthorizError('Авторизуйтесь'));
+    return next(new AuthorizError('Авторизуйтесь'));
   }
 
   const token = extractBearerToken(authorization);
