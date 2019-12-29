@@ -19,4 +19,4 @@ authRout.post('/signin', celebrate({
   }),
 }), login);
 
-module.exports = authRout;
+module.exports = authRout ;
