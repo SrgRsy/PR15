@@ -31,6 +31,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 app.use('/', authoriz);
+app.use(auth);
 app.use('/users', users);
 app.use('/cards', cards);
 app.use((req, res, next) => {
@@ -38,7 +39,7 @@ app.use((req, res, next) => {
 })
 
 
-app.use(auth);
+
 
 app.use(errorLogger);
 
